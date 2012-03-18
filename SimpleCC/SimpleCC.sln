@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleCCompiler", "SimpleCCompiler\SimpleCCompiler.csproj", "{2611EB42-E3C5-4DAA-953C-6CE022D0CDC0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleC", "SimpleCCompiler\SimpleC.csproj", "{2611EB42-E3C5-4DAA-953C-6CE022D0CDC0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleCC_IDE_Web", "SimpleCC_IDE_Web\SimpleCC_IDE_Web.csproj", "{0731F39C-E813-49FD-AD91-573C3D3B5E01}"
 EndProject
@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		SimpleCC.vsmdi = SimpleCC.vsmdi
 		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{7E7F6782-B394-4F28-ABD6-2870640F8BCA}"
 EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
@@ -38,5 +40,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F6D6EF92-9ADA-419E-BAB7-0AD4093319A4} = {7E7F6782-B394-4F28-ABD6-2870640F8BCA}
 	EndGlobalSection
 EndGlobal

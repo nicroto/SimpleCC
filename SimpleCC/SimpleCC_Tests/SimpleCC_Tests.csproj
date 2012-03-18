@@ -48,6 +48,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnitTest1.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SimpleCCompiler\SimpleC.csproj">
+      <Project>{2611EB42-E3C5-4DAA-953C-6CE022D0CDC0}</Project>
+      <Name>SimpleC</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
