@@ -53,9 +53,18 @@
     <Compile Include="SymbolTable\Symbols\TableSymbol.cs" />
     <Compile Include="Tokens\EOFToken.cs" />
     <Compile Include="Tokens\IdentToken.cs" />
+    <Compile Include="Tokens\KeywordToken.cs" />
+    <Compile Include="Tokens\LiteralToken.cs" />
+    <Compile Include="Tokens\NumberToken.cs" />
+    <Compile Include="Tokens\OtherToken.cs" />
+    <Compile Include="Tokens\SpecialSymbolToken.cs" />
     <Compile Include="Tokens\Token.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Docs\Simple-C-1.TXT" />
+    <None Include="Docs\Simple-C-3.TXT" />
+    <None Include="Docs\Simple-C-5.TXT" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -20,7 +20,7 @@ namespace SimpleC
             this.references = references;
             foreach (string assemblyRef in references)
             {
-                Assembly.LoadWithPartialName(assemblyRef);
+                Assembly.Load(assemblyRef);
             }
         }
 
