@@ -1,4 +1,4 @@
-﻿азбука
+﻿Alphabet
 ------
 
  Letter = 'a'..'z' | 'A'..'Z' | '_'.
@@ -6,7 +6,7 @@
  Space = \t | \n | \r | ' '.
  AnyChar = ' '..\0xff.
 
-лексеми
+Lexems
 -------
 
   Number = Digit {Digit}.
@@ -18,7 +18,7 @@
                   '|' | '/' | '%' | '&' | '~' | '++' | '--'.
   OtherSymbol = ...
 
-граматика
+Grammar
 ---------
 
 [1] Program = {Statement}.
@@ -27,20 +27,20 @@
 [4] BitwiseAndExpression = AdditiveExpression {'&' AdditiveExpression}.
 [5] AdditiveExpression = MultiplicativeExpression {('+' | '-') MultiplicativeExpression}.
 [6] MultiplicativeExpression = PrimaryExpression {('*' | '/' | '%') PrimaryExpression}.
-[7] PrimaryExpression = Ident ['=' Expression] | '~' PrimaryExpression | '++' Ident | '--' Ident | Ident '++' | Ident '--' | 
+[7] PrimaryExpression = Ident ['=' Expression] | Ident '++' | Ident '--' | '~' PrimaryExpression | '++' Ident | '--' Ident |
 						Number | PrintFunc | ScanfFunc | '(' Expression ')'.
 [8] PrintFunc = 'printf' '(' Expression ')'.
 [9] ScanfFunc = 'scanf' '(' ')'.
 
-таблици
+Tables
 -------
 
-  дефинирани идентификатори (Name, Value, ...)
+  Reserved identifiers (Name, Value, ...)
 
-  вградени типове и функции:
+  Embedded types:
     типове    { int }
 
-примери
+Examples
 -------
 
 A = scanf();

@@ -1,35 +1,55 @@
-﻿namespace SimpleC
+﻿using System;
+namespace SimpleC
 {
     public class DefaultDiagnostics: Diagnostics
     {
-        public override void Error(int line, int column, string message)
+        private int errorCount = 0;
+        public int ErrorCount
         {
-            throw new System.NotImplementedException();
+            get { return errorCount; }
         }
 
-        public override void Warning(int line, int column, string message)
+        private int warningCount = 0;
+        public int WarningCount
         {
-            throw new System.NotImplementedException();
+            get { return warningCount; }
         }
 
-        public override void Note(int line, int column, string message)
+        private int noteCount = 0;
+        public int NoteCount
         {
-            throw new System.NotImplementedException();
+            get { return noteCount; }
         }
 
+        public override void Error(int line, int column, String message)
+        {
+            Console.WriteLine(string.Format("Error on line {0}, col {1}: {2}", line, column, message));
+            errorCount++;
+        }
+
+        public override void Warning(int line, int column, String message)
+        {
+            Console.WriteLine("Warning on line {0}, col {1}: {2}", line, column, message);
+            warningCount++;
+        }
+
+        public override void Note(int line, int column, String message)
+        {
+            Console.WriteLine("Not on line {0}, col {1}: {2}", line, column, message);
+            noteCount++;
+        }
         public override int GetErrorCount()
         {
-            throw new System.NotImplementedException();
+            return errorCount;
         }
-
         public override void BeginSourceFile(string sourceFile)
         {
-            throw new System.NotImplementedException();
+            // no op
         }
 
         public override void EndSourceFile()
         {
-            throw new System.NotImplementedException();
+            // no op
         }
     }
 }

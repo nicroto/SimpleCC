@@ -2,18 +2,20 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{2611EB42-E3C5-4DAA-953C-6CE022D0CDC0}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{862139F7-DF39-472B-9650-BC5919D244C6}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SimpleC</RootNamespace>
-    <AssemblyName>SimpleCCompiler</AssemblyName>
+    <RootNamespace>Console</RootNamespace>
+    <AssemblyName>Console</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,16 +24,14 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -43,30 +43,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Compiler.cs" />
-    <Compile Include="DefaultDiagnostics.cs" />
-    <Compile Include="Diagnostics.cs" />
-    <Compile Include="Emitter.cs" />
-    <Compile Include="Parser.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Scanner.cs" />
-    <Compile Include="SymbolTable\Symbols\PrimitiveTypeSymbol.cs" />
-    <Compile Include="SymbolTable\Symbols\TypeSymbol.cs" />
-    <Compile Include="Table.cs" />
-    <Compile Include="SymbolTable\Symbols\TableSymbol.cs" />
-    <Compile Include="Tokens\EOFToken.cs" />
-    <Compile Include="Tokens\IdentToken.cs" />
-    <Compile Include="Tokens\KeywordToken.cs" />
-    <Compile Include="Tokens\LiteralToken.cs" />
-    <Compile Include="Tokens\NumberToken.cs" />
-    <Compile Include="Tokens\OtherToken.cs" />
-    <Compile Include="Tokens\SpecialSymbolToken.cs" />
-    <Compile Include="Tokens\Token.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Docs\Simple-C-1.TXT" />
-    <None Include="Docs\Simple-C-3.TXT" />
-    <None Include="Docs\Simple-C-5.TXT" />
+    <ProjectReference Include="..\SimpleCCompiler\SimpleC.csproj">
+      <Project>{2611EB42-E3C5-4DAA-953C-6CE022D0CDC0}</Project>
+      <Name>SimpleC</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

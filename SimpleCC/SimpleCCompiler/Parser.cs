@@ -1,6 +1,4 @@
-﻿using SimpleC.SymbolTable;
-using SimpleC.Tokens;
-using System;
+﻿using SimpleC.Tokens;
 
 namespace SimpleC
 {
@@ -71,13 +69,18 @@ namespace SimpleC
             return result;
         }
 
+        private bool CheckIsEndOfFIle()
+        {
+            return token is EOFToken;
+        }
+
         /* Grammar
          */
 
         // [1] Program = {Statement}
         public bool IsProgram()
         {
-            while (IsStatement());
+            while (!CheckIsEndOfFIle() || IsStatement());
 
             return diag.GetErrorCount() == 0;
         }
@@ -139,12 +142,14 @@ namespace SimpleC
         private bool IsPrimaryExpression()
         {
             var result = true;
-            if (IsVariableAssignment()) ;
+            if (IsVariableAssignment())
+            {
+                if (CheckSpecialSymbol("++")) ;
+                else if (CheckSpecialSymbol("--")) ;
+            }
             else if (IsLogicalNot()) ;
             else if (IsPreIncrementation()) ;
             else if (IsPreDecrementation()) ;
-            else if (IsPostIncrementation()) ;
-            else if (IsPostDecrementation()) ;
             else if (IsNumber()) ;
             else if (IsPrintFunc()) ;
             else if (IsScanFunc()) ;
@@ -211,20 +216,6 @@ namespace SimpleC
         {
             if (!CheckSpecialSymbol("--")) return false;
             if (!CheckIsIdent()) return false;
-            return true;
-        }
-
-        private bool IsPostIncrementation()
-        {
-            if (!CheckIsIdent()) return false;
-            if (!CheckSpecialSymbol("++")) return false;
-            return true;
-        }
-
-        private bool IsPostDecrementation()
-        {
-            if (!CheckIsIdent()) return false;
-            if (!CheckSpecialSymbol("--")) return false;
             return true;
         }
 
