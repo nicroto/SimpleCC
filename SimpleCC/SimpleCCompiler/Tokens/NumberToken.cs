@@ -4,9 +4,9 @@ namespace SimpleC.Tokens
 {
     class NumberToken: LiteralToken
     {
-        public long value;
+        public int value;
 
-        public NumberToken(int line, int column, long value)
+        public NumberToken(int line, int column, int value)
             : base(line, column)
         {
             this.value = value;

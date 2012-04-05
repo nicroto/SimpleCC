@@ -130,7 +130,7 @@ namespace SimpleC
                 s.Append(ch);
                 ReadNextChar();
             }
-            return new NumberToken(start_line, start_column, Convert.ToInt64(s.ToString()));
+            return new NumberToken(start_line, start_column, Convert.ToInt32(s.ToString()));
         }
 
         private Token ScanSpecialSymbolA(int start_line, int start_column)
