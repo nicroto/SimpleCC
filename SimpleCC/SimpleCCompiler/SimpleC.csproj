@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AST.cs" />
     <Compile Include="Compiler.cs" />
     <Compile Include="DefaultDiagnostics.cs" />
     <Compile Include="Diagnostics.cs" />
@@ -50,10 +51,6 @@
     <Compile Include="Parser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scanner.cs" />
-    <Compile Include="SymbolTable\Symbols\PrimitiveTypeSymbol.cs" />
-    <Compile Include="SymbolTable\Symbols\TypeSymbol.cs" />
-    <Compile Include="Table.cs" />
-    <Compile Include="SymbolTable\Symbols\TableSymbol.cs" />
     <Compile Include="Tokens\EOFToken.cs" />
     <Compile Include="Tokens\IdentToken.cs" />
     <Compile Include="Tokens\KeywordToken.cs" />

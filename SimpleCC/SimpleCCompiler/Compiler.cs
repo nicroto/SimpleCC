@@ -16,9 +16,7 @@ namespace SimpleC
         {
             TextReader reader = new StreamReader(file);
             Scanner scanner = new Scanner(reader);
-            Table symbolTable = new Table(references);
-            Emitter emit = new Emitter(assemblyName, symbolTable);
-            Parser parser = new Parser(scanner, emit, symbolTable, diag);
+            Parser parser = new Parser(scanner, diag);
 
             diag.BeginSourceFile(file);
             bool isProgram = parser.Parse();
@@ -26,7 +24,7 @@ namespace SimpleC
 
             if (isProgram)
             {
-                emit.WriteExecutable();
+                Emitter emit = new Emitter(parser.Result, assemblyName);
                 return true;
             }
             else

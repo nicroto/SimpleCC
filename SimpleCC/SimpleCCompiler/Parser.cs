@@ -1,27 +1,26 @@
 ﻿using SimpleC.Tokens;
+using System.Collections.Generic;
 
 namespace SimpleC
 {
     class Parser
     {
         private Scanner scanner;
-        private Emitter emit;
-        private Table symbolTable;
         private Diagnostics diag;
         private Token token;
 
-        public Parser(Scanner scanner, Emitter emit, Table symbolTable, Diagnostics diag)
+        public List<Statement> Result = new List<Statement>();
+
+        public Parser(Scanner scanner, Diagnostics diag)
         {
             this.scanner = scanner;
-            this.emit = emit;
-            this.symbolTable = symbolTable;
             this.diag = diag;
         }
 
         public bool Parse()
         {
             ReadNextToken();
-            return IsProgram() && token is EOFToken;
+            return IsProgram() && CheckIsEndOfFIle();
         }
 
         private void Error(string message)
@@ -80,7 +79,7 @@ namespace SimpleC
         // [1] Program = {Statement}
         public bool IsProgram()
         {
-            while (!CheckIsEndOfFIle() || IsStatement());
+            while (!CheckIsEndOfFIle() && IsStatement()) ;
 
             return diag.GetErrorCount() == 0;
         }
@@ -88,79 +87,140 @@ namespace SimpleC
         // [2] Statement = [Expression] ';'.
         private bool IsStatement()
         {
-            if (!IsExpression()) Error("Expression is not well formed.");
+            var statement = new Statement();
+            if (!IsExpression(statement)) Error("Expression is not well formed.");
             if (!CheckSpecialSymbol(";")) Error("\";\" expected.");
+            this.Result.Add(statement);
             return true;
         }
 
         // [3] Expression = BitwiseAndExpression {'|' BitwiseAndExpression}.
-        private bool IsExpression()
+        private bool IsExpression(IExpressionHolder expressionHolder)
         {
-            if (!IsBitwiseAndExpression()) return false;
+            var expression = new Expression();
+            if (!IsBitwiseAndExpression(expression)) return false;
             while (CheckSpecialSymbol("|"))
             {
-                IsBitwiseAndExpression();
+                IsBitwiseAndExpression(expression);
             }
+            expressionHolder.Expression = expression;
             return true;
         }
 
         // [4] BitwiseAndExpression = AdditiveExpression {'&' AdditiveExpression}.
-        private bool IsBitwiseAndExpression()
+        private bool IsBitwiseAndExpression(Expression expression)
         {
-            if (!IsAdditiveExpression()) return false;
+            var bitwiseExpression = new BitwiseExpression();
+            if (!IsAdditiveExpression(bitwiseExpression)) return false;
             while (CheckSpecialSymbol("&"))
             {
-                IsAdditiveExpression();
+                IsAdditiveExpression(bitwiseExpression);
             }
+            expression.Operands.Add(bitwiseExpression);
             return true;
         }
 
         // [5] AdditiveExpression = MultiplicativeExpression {('+' | '-') MultiplicativeExpression}.
-        private bool IsAdditiveExpression()
+        private bool IsAdditiveExpression(BitwiseExpression bitwiseExpression)
         {
-            if (!IsMultiplicativeExpression()) return false;
-            while (CheckSpecialSymbol("+") || CheckSpecialSymbol("-"))
+            var additiveExpression = new AdditiveExpression();
+            if (!IsMultiplicativeExpression(additiveExpression)) return false;
+            while (true)
             {
-                IsMultiplicativeExpression();
+                if (CheckSpecialSymbol("+"))
+                {
+                    additiveExpression.Operations.Add(Operation.Summation);
+                }
+                else if (CheckSpecialSymbol("-"))
+                {
+                    additiveExpression.Operations.Add(Operation.Subtraction);
+                }
+                else
+                {
+                    break;
+                }
+                IsMultiplicativeExpression(additiveExpression);
             }
+            bitwiseExpression.Operands.Add(additiveExpression);
             return true;
         }
 
         // [6] MultiplicativeExpression = PrimaryExpression {('*' | '/' | '%') PrimaryExpression}.
-        private bool IsMultiplicativeExpression()
+        private bool IsMultiplicativeExpression(AdditiveExpression additiveExpression)
         {
-            if (!IsPrimaryExpression()) return false;
-            while (CheckSpecialSymbol("*") || CheckSpecialSymbol("/") || CheckSpecialSymbol("%"))
+            var multiplicativeExpression = new MultiplicativeExpression();
+            if (!IsPrimaryExpression(multiplicativeExpression)) return false;
+            while (true)
             {
-                IsPrimaryExpression();
+                if (CheckSpecialSymbol("*"))
+                {
+                    multiplicativeExpression.Operations.Add(Operation.Multiplication);
+                }
+                else if (CheckSpecialSymbol("/"))
+                {
+                    multiplicativeExpression.Operations.Add(Operation.Division);
+                }
+                else if (CheckSpecialSymbol("%"))
+                {
+                    multiplicativeExpression.Operations.Add(Operation.Percentage);
+                }
+                else
+                {
+                    break;
+                }
+                IsPrimaryExpression(multiplicativeExpression);
             }
+            additiveExpression.Operands.Add(multiplicativeExpression);
             return true;
         }
 
         // [7] PrimaryExpression = Ident ['=' Expression] | '~' PrimaryExpression | '++' Ident | '--' Ident | Ident '++' | Ident '--' | 
         //                Number | PrintFunc | ScanfFunc | '(' Expression ')'.
-        private bool IsPrimaryExpression()
+        private bool IsPrimaryExpression(MultiplicativeExpression multiplicativeExpression)
         {
             var result = true;
-            if (IsVariableAssignment())
+            var identToken = token as IdentToken;
+            if (CheckIsIdent())
             {
-                if (CheckSpecialSymbol("++")) ;
-                else if (CheckSpecialSymbol("--")) ;
+                if (!IsVariableAssignment(identToken.value, multiplicativeExpression))
+                {
+                    if (CheckSpecialSymbol("++"))
+                    {
+                        var postIncrement = new VariablePostIncrement();
+                        postIncrement.Name = identToken.value;
+                        multiplicativeExpression.Operands.Add(postIncrement);
+                    }
+                    else if (CheckSpecialSymbol("--"))
+                    {
+                        var postDecrement = new VariablePostDecrement();
+                        postDecrement.Name = identToken.value;
+                        multiplicativeExpression.Operands.Add(postDecrement);
+                    }
+                    else
+                    {
+                        var variableIdent = new VariableIdent();
+                        variableIdent.Name = identToken.value;
+                        multiplicativeExpression.Operands.Add(variableIdent);
+                    }
+                }
             }
-            else if (IsLogicalNot()) ;
-            else if (IsPreIncrementation()) ;
-            else if (IsPreDecrementation()) ;
-            else if (IsNumber()) ;
-            else if (IsPrintFunc()) ;
-            else if (IsScanFunc()) ;
-            else if (IsLogicalNot()) ;
+            else if (IsLogicalNot(multiplicativeExpression)) ;
+            else if (IsPreIncrementation(multiplicativeExpression)) ;
+            else if (IsPreDecrementation(multiplicativeExpression)) ;
+            else if (IsNumber(multiplicativeExpression)) ;
+            else if (IsPrintFunc(multiplicativeExpression)) ;
+            else if (IsScanFunc(multiplicativeExpression)) ;
             else
             {
-                if (!(
-                    CheckSpecialSymbol("(") &&
-                    IsExpression() &&
+                var parenthesesExpression = new ParenthesesExpression();
+                if (CheckSpecialSymbol("(") &&
+                    IsExpression(parenthesesExpression) &&
                     CheckSpecialSymbol(")")
-                ))
+                )
+                {
+                    multiplicativeExpression.Operands.Add(parenthesesExpression);
+                }
+                else
                 {
                     result = false;
                 }
@@ -170,60 +230,92 @@ namespace SimpleC
         }
 
         // [8] PrintFunc = 'printf' '(' Expression ')'.
-        private bool IsPrintFunc()
+        private bool IsPrintFunc(MultiplicativeExpression multiplicativeExpression)
         {
             if (!CheckKeyword("printf")) return false;
-            if (!CheckSpecialSymbol("(")) return false;
-            if (!IsExpression()) return false;
+            var printFunc = new PrintFunction();
+            if (!CheckSpecialSymbol("(")) Error("Expected '(' symbol.");
+            if (IsExpression(printFunc))
+            {
+                multiplicativeExpression.Operands.Add(printFunc);
+            }
+            else
+            {
+                return false;
+            }
             if (!CheckSpecialSymbol(")")) return false;
             return true;
         }
 
         // [9] ScanfFunc = 'scanf' '(' ')'.
-        private bool IsScanFunc()
+        private bool IsScanFunc(MultiplicativeExpression multiplicativeExpression)
         {
             if (!CheckKeyword("scanf")) return false;
             if (!CheckSpecialSymbol("(")) return false;
             if (!CheckSpecialSymbol(")")) return false;
+            var scanFunc = new ScanFunction();
+            multiplicativeExpression.Operands.Add(scanFunc);
             return true;
         }
 
-        private bool IsVariableAssignment()
+        private bool IsVariableAssignment(string ident, MultiplicativeExpression multiplicativeExpression)
         {
-            if (!CheckIsIdent()) return false;
-            if (CheckSpecialSymbol("="))
-            {
-                if (!IsExpression()) return false;
-            }
+            if (!CheckSpecialSymbol("=")) return false;
+            var variableAssignment = new VariableAssignment();
+            variableAssignment.Name = ident;
+            if (!IsExpression(variableAssignment)) Error("Expected expression.");
+            multiplicativeExpression.Operands.Add(variableAssignment);
             return true;
         }
 
-        private bool IsLogicalNot()
+        private bool IsLogicalNot(MultiplicativeExpression multiplicativeExpression)
         {
+            var logicalNotExpression = new LogicalNotExpression();
+            var innerMultiplicativeExpression = new MultiplicativeExpression();
             if (!CheckSpecialSymbol("~")) return false;
-            if (!IsPrimaryExpression()) return false;
+            if (!IsPrimaryExpression(innerMultiplicativeExpression)) return false;
+            logicalNotExpression.PrimaryExpression = innerMultiplicativeExpression.Operands[0];
+            multiplicativeExpression.Operands.Add(logicalNotExpression);
             return true;
         }
 
-        private bool IsPreIncrementation()
+        private bool IsPreIncrementation(MultiplicativeExpression multiplicativeExpression)
         {
             if (!CheckSpecialSymbol("++")) return false;
+            var preIncrement = new VariablePreIncrement();
+            var identToken = token as IdentToken;
             if (!CheckIsIdent()) return false;
+            preIncrement.Name = identToken.value;
+            multiplicativeExpression.Operands.Add(preIncrement);
             return true;
         }
 
-        private bool IsPreDecrementation()
+        private bool IsPreDecrementation(MultiplicativeExpression multiplicativeExpression)
         {
             if (!CheckSpecialSymbol("--")) return false;
+            var preDecrement = new VariablePreDecrement();
+            var identToken = token as IdentToken;
             if (!CheckIsIdent()) return false;
+            preDecrement.Name = identToken.value;
+            multiplicativeExpression.Operands.Add(preDecrement);
             return true;
         }
 
-        private bool IsNumber()
+        private bool IsNumber(MultiplicativeExpression multiplicativeExpression)
         {
-            bool result = (token is NumberToken);
-            if (result) ReadNextToken();
-            return result;
+            var numberToken = token as NumberToken;
+            if (numberToken != null)
+            {
+                var number = new Number();
+                number.Value = numberToken.value;
+                multiplicativeExpression.Operands.Add(number);
+                ReadNextToken();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }
