@@ -7,7 +7,7 @@ class Program
     static int Main(string[] args)
     {
         args = args.Length > 0 ?
-            args : new string[] { @"C:\SourceCodeRepos\SimpleCC\SimpleCC\Console\bin\Debug\test.scs" };
+            args : new string[] { Path.Combine(Directory.GetCurrentDirectory(), "test.scs") };
         if (args.Length == 0)
         {
             Console.WriteLine("Syntax: console <source file>");
