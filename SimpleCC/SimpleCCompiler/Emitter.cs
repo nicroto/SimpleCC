@@ -32,6 +32,7 @@ namespace SimpleC
             // Go Compile!
             foreach(var statement in statements)
                 this.GenerateStatement(statement);
+
             this.il.Emit(OpCodes.Call, typeof(System.Console).GetMethod(
                 "ReadKey",
                 BindingFlags.Public | BindingFlags.Static,
@@ -39,6 +40,7 @@ namespace SimpleC
                 new System.Type[] { },
                 null
             ));
+
             il.Emit(OpCodes.Ret);
             typeBuilder.CreateType();
             modb.CreateGlobalFunctions();
