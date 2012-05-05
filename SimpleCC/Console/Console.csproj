@@ -47,10 +47,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SimpleCCompiler\SimpleC.csproj">
+    <ProjectReference Include="..\SimpleCCompiler\SimpleCCompiler.csproj">
       <Project>{2611EB42-E3C5-4DAA-953C-6CE022D0CDC0}</Project>
-      <Name>SimpleC</Name>
+      <Name>SimpleCCompiler</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="to copy in bin-debug\copyData.bat" />
+    <None Include="to copy in bin-debug\test.scs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

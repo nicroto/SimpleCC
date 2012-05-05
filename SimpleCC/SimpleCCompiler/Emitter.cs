@@ -33,6 +33,11 @@ namespace SimpleC
             foreach(var statement in statements)
                 this.GenerateStatement(statement);
 
+            this.il.Emit(OpCodes.Ldstr, "The Program has finished execution. Press any key to exit.");
+            this.il.Emit(OpCodes.Call, typeof(Console).GetMethod(
+                "WriteLine",
+                new Type[] { typeof(string) }
+            ));
             this.il.Emit(OpCodes.Call, typeof(System.Console).GetMethod(
                 "ReadKey",
                 BindingFlags.Public | BindingFlags.Static,
@@ -177,7 +182,10 @@ namespace SimpleC
             {
                 var printFunction = primaryExpression as PrintFunction;
                 GenerateExpression(printFunction.Expression);
-                this.il.Emit(OpCodes.Call, typeof(Console).GetMethod("WriteLine", new Type[] { typeof(int) }));
+                this.il.Emit(OpCodes.Call, typeof(Console).GetMethod(
+                    "WriteLine",
+                    new Type[] { typeof(int) }
+                ));
             }
             else if (primaryExpression is ScanFunction)
             {
