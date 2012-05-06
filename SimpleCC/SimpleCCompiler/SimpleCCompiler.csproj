@@ -61,9 +61,18 @@
     <Compile Include="Tokens\Token.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Docs\DepthFirstSearchi.simplec.c" />
+    <Content Include="Docs\Fibonachi.simplec.c" />
     <None Include="Docs\Simple-C-1.TXT" />
     <None Include="Docs\Simple-C-3.TXT" />
     <None Include="Docs\Simple-C-5.TXT" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Docs\Target Simple-C-N.TXT" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Docs\DepthFirstSearchi.js" />
+    <None Include="Docs\Fibonachi.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
