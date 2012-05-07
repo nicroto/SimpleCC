@@ -11,7 +11,7 @@ namespace SimpleC
         ILGenerator il = null;
         Dictionary<string, LocalBuilder> symbolTable;
 
-        public Emitter(List<Statement> statements, string moduleName)
+        public Emitter(List<IStatement> statements, string moduleName)
         {
             if (Path.GetFileName(moduleName) != moduleName)
             {
@@ -55,9 +55,46 @@ namespace SimpleC
             this.il = null;
         }
 
-        private void GenerateStatement(Statement statement)
+        private void GenerateStatement(IStatement statement)
         {
-            GenerateExpression(statement.Expression);
+            switch (statement.GetType().ToString())
+            {
+                case "Block":
+                    GenerateBlock((Block)statement);
+                    break;
+                case "IfStatement":
+                    GenerateIfStatement((IfStatement)statement);
+                    break;
+                case "WhileStatement":
+                    GenerateWhileStatement((WhileStatement)statement);
+                    break;
+                case "StopStatement":
+                    GenerateStopStatement((StopStatement)statement);
+                    break;
+                case "TerminalExpressionStatement":
+                    GenerateExpression(((TerminalExpressionStatement)statement).Expression);
+                    break;
+            }
+        }
+
+        private void GenerateBlock(Block block)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void GenerateIfStatement(IfStatement ifStatement)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void GenerateWhileStatement(WhileStatement whileStatement)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void GenerateStopStatement(StopStatement stopStatement)
+        {
+            throw new NotImplementedException();
         }
 
         private void GenerateExpression(Expression expression)

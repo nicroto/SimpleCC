@@ -9,7 +9,7 @@ namespace SimpleC
         private Diagnostics diag;
         private Token token;
 
-        public List<Statement> Result = new List<Statement>();
+        public List<IStatement> Result = new List<IStatement>();
 
         public Parser(Scanner scanner, Diagnostics diag)
         {
@@ -87,11 +87,56 @@ namespace SimpleC
         // [2] Statement = [Expression] ';'.
         private bool IsStatement()
         {
-            var statement = new Statement();
-            if (!IsExpression(statement)) Error("Expression is not well formed.");
-            if (!CheckSpecialSymbol(";")) Error("\";\" expected.");
+            IStatement statement;
+            if (IsBlock(out statement))
+            {
+
+            }
+            else if (IsIfStatement(out statement))
+            {
+
+            }
+            else if (IsWhileStatement(out statement))
+            {
+            }
+            else if (IsTerminalExpression(out statement))
+            {
+                if (!CheckSpecialSymbol(";")) Error("\";\" expected to follow this expression.");
+            }
+            else if (IsStopStatement(out statement))
+            {
+            }
+            else
+            {
+                Error("Unknown statement.");
+            }
             this.Result.Add(statement);
             return true;
+        }
+
+        private bool IsBlock(out IStatement statement)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        private bool IsIfStatement(out IStatement statement)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        private bool IsWhileStatement(out IStatement statement)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        private bool IsStopStatement(out IStatement statement)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        private bool IsTerminalExpression(out IStatement statement)
+        {
+            throw new System.NotImplementedException();
         }
 
         // [3] Expression = BitwiseAndExpression {'|' BitwiseAndExpression}.

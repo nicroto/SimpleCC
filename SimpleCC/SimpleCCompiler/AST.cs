@@ -7,11 +7,43 @@ namespace SimpleC
         Expression Expression { get; set; }
     }
 
+    public interface IStatementHolder
+    {
+        IStatement Statement { get; set; }
+    }
+
     public interface IAdditiveOperand
     {
     }
 
-    public class Statement : IExpressionHolder
+    public interface IStatement
+    {
+    }
+
+    public class Block : IStatement, IStatementHolder
+    {
+        public IStatement Statement { get; set; }
+    }
+
+    public class IfStatement : IStatement, IExpressionHolder, IStatementHolder
+    {
+        public Expression Expression { get; set; }
+
+        public IStatement Statement { get; set; }
+    }
+
+    public class WhileStatement : IfStatement
+    {
+    }
+
+    public class StopStatement : IStatement, IExpressionHolder
+    {
+        public bool IsReturn;
+
+        public Expression Expression { get; set; }
+    }
+
+    public class TerminalExpressionStatement : IStatement, IExpressionHolder
     {
         public Expression Expression { get; set; }
     }
