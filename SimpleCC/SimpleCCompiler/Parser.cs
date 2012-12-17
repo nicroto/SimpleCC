@@ -80,14 +80,13 @@ namespace SimpleC
         // [1] Program = {Statement}
         public bool IsProgram()
         {
-            var program = new Program();
-            while (!CheckIsEndOfFIle() && IsStatement(program)) ;
+            while (!CheckIsEndOfFIle() && IsStatement(this.Result)) ;
 
             return diag.GetErrorCount() == 0;
         }
 
         // [2] Statement = [Expression] ';'.
-        private bool IsStatement(Program program)
+        private bool IsStatement(IStatementHolder statementHolder)
         {
             IStatement statement;
             if (IsBlock(out statement)) {}
@@ -102,7 +101,7 @@ namespace SimpleC
             {
                 Error("Unknown statement.");
             }
-            this.Result.Statements.Add(statement);
+            statementHolder.Statements.Add(statement);
             return true;
         }
 
