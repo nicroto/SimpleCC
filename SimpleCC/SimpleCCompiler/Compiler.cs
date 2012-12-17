@@ -14,9 +14,9 @@ namespace SimpleC
 
         public static bool Compile(string file, string assemblyName, Diagnostics diag)
         {
-            TextReader reader = new StreamReader(file);
-            Scanner scanner = new Scanner(reader);
-            Parser parser = new Parser(scanner, diag);
+            var reader = new StreamReader(file);
+            var scanner = new Scanner(reader);
+            var parser = new Parser(scanner, diag);
 
             diag.BeginSourceFile(file);
             bool isProgram = parser.Parse();
@@ -24,7 +24,7 @@ namespace SimpleC
 
             if (isProgram)
             {
-                Emitter emit = new Emitter(parser.Result, assemblyName);
+                var emit = new Emitter(parser.Result, assemblyName);
                 return true;
             }
             else
