@@ -9,7 +9,7 @@ namespace SimpleC
         private Diagnostics diag;
         private Token token;
 
-        public List<IStatement> Result = new List<IStatement>();
+        public Program Result = new Program();
 
         public Parser(Scanner scanner, Diagnostics diag)
         {
@@ -73,70 +73,76 @@ namespace SimpleC
             return token is EOFToken;
         }
 
-        /* Grammar
+        /**
+         * Grammar
          */
 
         // [1] Program = {Statement}
         public bool IsProgram()
         {
-            while (!CheckIsEndOfFIle() && IsStatement()) ;
+            var program = new Program();
+            while (!CheckIsEndOfFIle() && IsStatement(program)) ;
 
             return diag.GetErrorCount() == 0;
         }
 
         // [2] Statement = [Expression] ';'.
-        private bool IsStatement()
+        private bool IsStatement(Program program)
         {
             IStatement statement;
-            if (IsBlock(out statement))
-            {
-
-            }
-            else if (IsIfStatement(out statement))
-            {
-
-            }
-            else if (IsWhileStatement(out statement))
-            {
-            }
+            if (IsBlock(out statement)) {}
+            else if (IsIfStatement(out statement)) {}
+            else if (IsWhileStatement(out statement)) {}
             else if (IsTerminalExpression(out statement))
             {
                 if (!CheckSpecialSymbol(";")) Error("\";\" expected to follow this expression.");
             }
-            else if (IsStopStatement(out statement))
-            {
-            }
+            else if (IsStopStatement(out statement)) {}
             else
             {
                 Error("Unknown statement.");
             }
-            this.Result.Add(statement);
+            this.Result.Statements.Add(statement);
             return true;
         }
 
         private bool IsBlock(out IStatement statement)
         {
-            throw new System.NotImplementedException();
+            statement = null;
+            return false;
         }
 
         private bool IsIfStatement(out IStatement statement)
         {
-            throw new System.NotImplementedException();
+            statement = null;
+            return false;
         }
 
         private bool IsWhileStatement(out IStatement statement)
         {
-            throw new System.NotImplementedException();
+            statement = null;
+            return false;
         }
 
         private bool IsStopStatement(out IStatement statement)
         {
-            throw new System.NotImplementedException();
+            statement = null;
+            return false;
         }
 
         private bool IsTerminalExpression(out IStatement statement)
         {
-            throw new System.NotImplementedException();
+            var terminalStatement = new TerminalExpressionStatement();
+            if (IsExpression(terminalStatement))
+            {
+                statement = terminalStatement;
+                return true;
+            }
+            else
+            {
+                statement = null;
+                return false;
+            }
         }
 
         // [3] Expression = BitwiseAndExpression {'|' BitwiseAndExpression}.

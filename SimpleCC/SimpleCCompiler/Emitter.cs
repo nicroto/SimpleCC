@@ -11,7 +11,7 @@ namespace SimpleC
         ILGenerator il = null;
         Dictionary<string, LocalBuilder> symbolTable;
 
-        public Emitter(List<IStatement> statements, string moduleName)
+        public Emitter(Program program, string moduleName)
         {
             if (Path.GetFileName(moduleName) != moduleName)
             {
@@ -30,6 +30,7 @@ namespace SimpleC
             this.symbolTable = new Dictionary<string, LocalBuilder>();
 
             // Go Compile!
+            var statements = program.Statements;
             foreach(var statement in statements)
                 this.GenerateStatement(statement);
 
@@ -57,7 +58,7 @@ namespace SimpleC
 
         private void GenerateStatement(IStatement statement)
         {
-            switch (statement.GetType().ToString())
+            switch (statement.GetType().Name)
             {
                 case "Block":
                     GenerateBlock((Block)statement);

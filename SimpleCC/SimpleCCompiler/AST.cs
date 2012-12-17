@@ -9,7 +9,7 @@ namespace SimpleC
 
     public interface IStatementHolder
     {
-        IStatement Statement { get; set; }
+        List<IStatement> Statements { get; set; }
     }
 
     public interface IAdditiveOperand
@@ -20,16 +20,26 @@ namespace SimpleC
     {
     }
 
+    public class Program: IStatementHolder
+    {
+        public List<IStatement> Statements { get; set; }
+
+        public Program()
+        {
+            this.Statements = new List<IStatement>();
+        }
+    }
+
     public class Block : IStatement, IStatementHolder
     {
-        public IStatement Statement { get; set; }
+        public List<IStatement> Statements { get; set; }
     }
 
     public class IfStatement : IStatement, IExpressionHolder, IStatementHolder
     {
         public Expression Expression { get; set; }
 
-        public IStatement Statement { get; set; }
+        public List<IStatement> Statements { get; set; }
     }
 
     public class WhileStatement : IfStatement
