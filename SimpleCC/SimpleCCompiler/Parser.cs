@@ -174,8 +174,8 @@ namespace SimpleC
             return true;
         }
 
-        // [7] PrimaryExpression = Ident ['=' Expression] | '~' PrimaryExpression | '++' Ident | '--' Ident | Ident '++' | Ident '--' | 
-        //                Number | PrintFunc | ScanfFunc | '(' Expression ')'.
+        // [7] PrimaryExpression = Ident ['=' Expression] | '~' PrimaryExpression | '++' Ident |
+        // '--' Ident | Ident '++' | Ident '--' | Number | PrintFunc | ScanfFunc | '(' Expression ')'.
         private bool IsPrimaryExpression(MultiplicativeExpression multiplicativeExpression)
         {
             var result = true;
