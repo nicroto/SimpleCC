@@ -12,13 +12,16 @@ namespace SimpleC
         List<IStatement> Statements { get; set; }
     }
 
-    public interface IAdditiveOperand
+    public interface IAdditiveOperand {}
+
+    public interface IStatement {}
+
+    public interface IBlockHolder
     {
+        BlockStatement Block { get; set; }
     }
 
-    public interface IStatement
-    {
-    }
+    public interface IExpressionBlockStatement : IStatement, IExpressionHolder, IBlockHolder {}
 
     public class Program: IStatementHolder
     {
@@ -30,20 +33,44 @@ namespace SimpleC
         }
     }
 
-    public class Block : IStatement, IStatementHolder
+    public class BlockStatement : IStatement, IStatementHolder
     {
         public List<IStatement> Statements { get; set; }
+
+        public BlockStatement()
+        {
+            this.Statements = new List<IStatement>();
+        }
     }
 
-    public class IfStatement : IStatement, IExpressionHolder, IStatementHolder
+    public class IfStatement : IExpressionBlockStatement
     {
         public Expression Expression { get; set; }
 
-        public List<IStatement> Statements { get; set; }
+        public BlockStatement Block { get; set; }
+
+        public List<ElseIfStatement> ElseIfs = new List<ElseIfStatement>();
+
+        public ElseStatement Else;
     }
 
-    public class WhileStatement : IfStatement
+    public class ElseIfStatement : IExpressionBlockStatement
     {
+        public Expression Expression { get; set; }
+
+        public BlockStatement Block { get; set; }
+    }
+
+    public class ElseStatement : IStatement, IBlockHolder
+    {
+        public BlockStatement Block { get; set; }
+    }
+
+    public class WhileStatement : IExpressionBlockStatement
+    {
+        public Expression Expression { get; set; }
+
+        public BlockStatement Block { get; set; }
     }
 
     public class StopStatement : IStatement, IExpressionHolder

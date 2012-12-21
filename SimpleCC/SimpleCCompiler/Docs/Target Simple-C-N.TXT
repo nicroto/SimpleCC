@@ -35,8 +35,8 @@ Grammar
 					StopSt |
 					[Expression] ';'.
 [3]  Block = '{' {Statement} '}'
-[4]  IfSt = 'if' '(' Expression ')' Statement ['else' Statement].
-[5]  WhileSt = 'while' '(' Expression ')' Statement. 
+[4]  IfSt = 'if' '(' Expression ')' Block {'else if' '(' Expression ')' Block}['else' Block].
+[5]  WhileSt = 'while' '(' Expression ')' Block. 
 [6]  StopSt =	'break' ';' |
 				'continue' ';'.
 [7]  Expression =  AdditiveExpr [('<' | '<=' | '==' | '!=' | '>=' | '>') AdditiveExpr].

@@ -1,20 +1,33 @@
-﻿A = 1234;
-printf(A);
-b = A | 123 & 456;
+﻿a = scanf();
+b = 0;
+printf(a);
+if (a > 0) {
+	b = 1;
+} else if (a < 0) {
+	b = 2;
+} else {
+	b = 3;
+}
 printf(b);
-A++;
-printf(A);
---A;
-printf(A);
-A = 10;
-printf((A++) + 1);
-printf(A);
-T = ~(1*2/4 + 4 - 1*5 + 4*(2 - 3));
-printf(T);
-printf(A);
-C = (A++) - (--A);
-printf(C);
-printf(A);
-D = scanf();
-printf((--D)*A/11);
-printf(D);
+a = scanf();
+b = 0;
+printf(a);
+if (a > 0) {
+	b = 1;
+} else if (a < 0) {
+	b = 2;
+} else {
+	b = 3;
+}
+printf(b);
+a = scanf();
+b = 0;
+printf(a);
+if (a > 0) {
+	b = 1;
+} else if (a < 0) {
+	b = 2;
+} else {
+	b = 3;
+}
+printf(b);

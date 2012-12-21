@@ -68,6 +68,26 @@ namespace SimpleC
             return result;
         }
 
+        private bool CheckIsBoolExpressionInParantheses(IExpressionHolder expressionHolder)
+        {
+            if (!CheckSpecialSymbol("("))
+            {
+                Error("Expected '('");
+                return false;
+            }
+            if (!IsBoolExpression(expressionHolder))
+            {
+                Error("Expected expression");
+                return false;
+            }
+            if (!CheckSpecialSymbol(")"))
+            {
+                Error("Expected ')'");
+                return false;
+            }
+            return true;
+        }
+
         private bool CheckIsEndOfFIle()
         {
             return token is EOFToken;
@@ -85,63 +105,90 @@ namespace SimpleC
             return diag.GetErrorCount() == 0;
         }
 
-        // [2] Statement = [Expression] ';'.
+        // [2]  Statement =	Block |	IfSt |	WhileSt | StopSt | [Expression] ';'.
         private bool IsStatement(IStatementHolder statementHolder)
         {
-            IStatement statement;
-            if (IsBlock(out statement)) {}
-            else if (IsIfStatement(out statement)) {}
-            else if (IsWhileStatement(out statement)) {}
-            else if (IsTerminalExpression(out statement))
+            if (IsIfStatement(statementHolder)) {}
+            else if (IsWhileStatement(statementHolder)) {}
+            else if (IsTerminalExpression(statementHolder))
             {
                 if (!CheckSpecialSymbol(";")) Error("\";\" expected to follow this expression.");
             }
-            else if (IsStopStatement(out statement)) {}
+            else if (IsStopStatement(statementHolder)) {}
             else
             {
                 Error("Unknown statement.");
             }
-            statementHolder.Statements.Add(statement);
             return true;
         }
 
-        private bool IsBlock(out IStatement statement)
+        // [3]  Block = '{' {Statement} '}'
+        private bool IsBlockStatement(IBlockHolder blockHolder)
         {
-            statement = null;
+            var blockStatement = new BlockStatement();
+            if (!CheckSpecialSymbol("{")) return false;
+            while (IsStatement(blockStatement)) ;
+            if (!CheckSpecialSymbol("}")) Error("Expected '}' for block's end");
+            blockHolder.Block = blockStatement;
+            return true;
+        }
+
+        // [4]  IfSt = 'if' '(' Expression ')' Block {'else if' '(' Expression ')' Block}['else' Block].
+        private bool IsIfStatement(IStatementHolder statementHolder)
+        {
+            var ifStatement = new IfStatement();
+            if (!CheckKeyword("if")) return false;
+            if (!CheckIsBoolExpressionInParantheses(ifStatement)) Error("'if' statement requires a bool expression");
+            if (!IsBlockStatement(ifStatement)) Error("'if' statement requires a block");
+            while (IsElseIfStatement(ifStatement)) ;
+            IsElseStatement(ifStatement);
+            statementHolder.Statements.Add(ifStatement);
+            return true;
+        }
+
+        private bool IsElseIfStatement(IfStatement ifStatement)
+        {
+            var elseIfStatement = new ElseIfStatement();
+            if (!CheckKeyword("else")) return false;
+            if (!CheckKeyword("if")) Error("'else if' statement malformed - 'if' keyword is missing");
+            if (!CheckIsBoolExpressionInParantheses(elseIfStatement)) Error("'else if' statement requires a bool expression");
+            if (!IsBlockStatement(elseIfStatement)) Error("'else if' statement requires a block");
+            ifStatement.ElseIfs.Add(elseIfStatement);
+            return true;
+        }
+
+        private bool IsElseStatement(IfStatement ifStatement)
+        {
+            var elseStatement = new ElseStatement();
+            if (!CheckKeyword("else")) return false;
+            if (!IsBlockStatement(elseStatement)) Error("'else' statement requires a block");
+            ifStatement.Else = elseStatement;
+            return true;
+        }
+
+        // [5]  WhileSt = 'while' '(' Expression ')' Block.
+        private bool IsWhileStatement(IStatementHolder statementHolder)
+        {
             return false;
         }
 
-        private bool IsIfStatement(out IStatement statement)
+        // [6]  StopSt = 'break' ';' | 'continue' ';'.
+        private bool IsStopStatement(IStatementHolder statementHolder)
         {
-            statement = null;
             return false;
         }
 
-        private bool IsWhileStatement(out IStatement statement)
-        {
-            statement = null;
-            return false;
-        }
-
-        private bool IsStopStatement(out IStatement statement)
-        {
-            statement = null;
-            return false;
-        }
-
-        private bool IsTerminalExpression(out IStatement statement)
+        private bool IsTerminalExpression(IStatementHolder statementHolder)
         {
             var terminalStatement = new TerminalExpressionStatement();
-            if (IsExpression(terminalStatement))
-            {
-                statement = terminalStatement;
-                return true;
-            }
-            else
-            {
-                statement = null;
-                return false;
-            }
+            if (!IsExpression(terminalStatement)) return false;
+            statementHolder.Statements.Add(terminalStatement);
+            return true;
+        }
+
+        private bool IsBoolExpression(IExpressionHolder expressionHolder)
+        {
+            throw new System.NotImplementedException();
         }
 
         // [3] Expression = BitwiseAndExpression {'|' BitwiseAndExpression}.

@@ -61,7 +61,7 @@ namespace SimpleC
             switch (statement.GetType().Name)
             {
                 case "Block":
-                    GenerateBlock((Block)statement);
+                    GenerateBlock((BlockStatement)statement);
                     break;
                 case "IfStatement":
                     GenerateIfStatement((IfStatement)statement);
@@ -78,7 +78,7 @@ namespace SimpleC
             }
         }
 
-        private void GenerateBlock(Block block)
+        private void GenerateBlock(BlockStatement block)
         {
             throw new NotImplementedException();
         }

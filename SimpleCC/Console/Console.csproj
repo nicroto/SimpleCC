@@ -53,8 +53,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="to copy in bin-debug\copyData.bat" />
-    <None Include="to copy in bin-debug\test.scs" />
+    <None Include="run sample automation\copy.bat" />
+    <None Include="run sample automation\v1 test.scs" />
+    <None Include="run sample automation\copyCompileRun.bat" />
+    <None Include="run sample automation\test.scs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

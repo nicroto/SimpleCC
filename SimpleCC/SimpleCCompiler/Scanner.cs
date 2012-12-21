@@ -8,9 +8,9 @@ namespace SimpleC
     class Scanner
     {
         static readonly string keywords =
-            " scanf printf ";
+            " while if scanf printf ";
         static readonly string specialSymbolsA =
-            "%()/*;~";
+            "%()/*;~{}[]";
         static readonly string specialSymbolsB =
             "&|+-=";
         static readonly string specialSymbolPairs =
